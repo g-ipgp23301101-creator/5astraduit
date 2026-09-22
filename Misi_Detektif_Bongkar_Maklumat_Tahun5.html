@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Misi Detektif: Bongkar Maklumat!</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#172033;background:linear-gradient(135deg,#dff4ff,#f7f0ff 50%,#fff6cf);min-height:100vh}
+button{font:inherit;cursor:pointer}.app{max-width:1120px;margin:auto;padding:16px}
+.header{background:linear-gradient(135deg,#183b73,#7048b9);color:white;border-radius:25px;padding:20px 22px;box-shadow:0 10px 25px #253b6b35;position:relative;overflow:hidden}
+.header:after{content:"💵  💰  🪙  💵  💰";position:absolute;right:15px;bottom:5px;font-size:28px;opacity:.25;transform:rotate(-7deg)}
+.header h1{margin:0;font-size:clamp(25px,4vw,42px)}.header p{margin:7px 0 0;opacity:.9}
+.panel{background:#ffffffec;border:2px solid #e3e8f2;border-radius:23px;padding:19px;box-shadow:0 8px 25px #26344a14;margin-top:15px}
+.hidden{display:none!important}
+.setup h2{margin-top:0}.teamgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.team{background:#f8fbff;border:2px solid #d9e8ff;border-radius:17px;padding:13px}
+.team label{font-weight:800;color:#234a87;display:block;margin-bottom:7px}.team input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px}
+.start{margin-top:15px;width:100%;border:0;border-radius:15px;padding:14px;background:#2563eb;color:#fff;font-weight:900;font-size:17px}
+.banktop{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.wallet{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:17px;padding:11px 15px;font-weight:900;color:#7c4a03;text-align:center}
+.scores{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}.score{border:2px solid #e2e8f0;background:#fff;border-radius:14px;padding:9px;text-align:center}.score .coin{font-size:20px}.score strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.score b{font-size:21px;color:#166534}
+.boardtitle{font-size:20px;font-weight:900;margin:10px 0}.moneygrid{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}
+.money{border:0;min-height:120px;border-radius:17px;padding:10px;color:#173f2a;position:relative;overflow:hidden;box-shadow:0 7px 13px #47556922;transition:.15s;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.money:before,.money:after{content:"✦";position:absolute;font-size:25px;opacity:.3}.money:before{left:8px;top:5px}.money:after{right:8px;bottom:5px}
+.money.easy{background:linear-gradient(135deg,#d9f99d,#86efac);border:3px solid #22c55e}.money.medium{background:linear-gradient(135deg,#bfdbfe,#93c5fd);border:3px solid #3b82f6}.money.hard{background:linear-gradient(135deg,#ddd6fe,#c4b5fd);border:3px solid #8b5cf6}
+.money:hover:not(:disabled){transform:translateY(-4px) rotate(-1deg);box-shadow:0 12px 20px #47556930}.money:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.4)}
+.money .denom{font-size:27px;font-weight:1000}.money .label{font-weight:900;font-size:13px}.money .qno{font-size:12px;margin-top:5px}
+.turn{background:#eff6ff;border:2px solid #bfdbfe;border-radius:14px;padding:10px;font-weight:900;color:#1e40af}
+.questionhead{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.pill{border-radius:999px;padding:7px 11px;font-weight:900;font-size:13px;background:#f1f5f9}.qtext{font-size:clamp(20px,3vw,29px);line-height:1.35;margin:18px 0}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:11px}.opt{border:2px solid #dbe4f0;background:#f8fafc;border-radius:15px;padding:14px;text-align:left;min-height:65px;font-weight:750}.opt:hover{border-color:#60a5fa;background:#eff6ff}.opt.correct{background:#dcfce7;border-color:#16a34a}.opt.wrong{background:#fee2e2;border-color:#dc2626}.opt:disabled{cursor:not-allowed}
+.feedback{margin-top:13px;padding:13px;border-radius:14px;font-weight:800}.next{width:100%;margin-top:12px;padding:13px;border:0;border-radius:14px;background:#172554;color:white;font-weight:900}
+.chance{margin-top:12px;padding:13px;border-radius:15px;background:#fff7ed;border:2px dashed #fb923c}.chance h3{margin:0 0 8px}.chanceBtns{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.chance button{border:0;border-radius:12px;padding:10px;background:#fed7aa;color:#7c2d12;font-weight:900}.chance button:hover{background:#fdba74}
+.final{text-align:center}.final .trophy{font-size:65px}.final h2{font-size:32px;margin:5px}.rank{display:grid;grid-template-columns:45px 1fr 100px;gap:8px;padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}.rank:last-child{border:0}.again{margin-top:15px;border:0;border-radius:14px;padding:13px 20px;background:#7c3aed;color:#fff;font-weight:900}
+.note{color:#64748b;font-size:13px;margin-bottom:0}
+@media(max-width:760px){.teamgrid{grid-template-columns:1fr 1fr}.scores{grid-template-columns:repeat(3,1fr)}.moneygrid{grid-template-columns:repeat(3,1fr)}.options{grid-template-columns:1fr}.chanceBtns{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:450px){.app{padding:9px}.teamgrid{grid-template-columns:1fr}.moneygrid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header"><h1>🔎 MISI DETEKTIF: BONGKAR MAKLUMAT!</h1><p>💳 Pembelian Tanpa Tunai • Tersurat & Tersirat • Kumpul MARKAH 💰</p></header>
+
+<section id="setup" class="panel">
+<h2>🏦 Buka Akaun Kumpulan</h2>
+<p>Masukkan nama 6 kumpulan. Kemudian murid boleh <b>pilih sendiri mana-mana duit soalan</b> yang masih tersedia.</p>
+<div class="teamgrid" id="teamgrid"></div>
+<button class="start" id="start">💰 BUKA BANK & MULA MISI</button>
+<p class="note">Hijau = 1 markah • Biru = 2 markah • Ungu = 3 markah</p>
+</section>
+
+<section id="game" class="hidden">
+<div class="banktop"><div class="turn" id="turn"></div><div class="wallet">👛 BANK MARKAH<br><span id="totalbank">0</span> / 60</div></div>
+<div class="scores" id="scores"></div>
+<div class="panel">
+<div class="boardtitle">💵 Pilih Duit Soalan</div>
+<p class="note">Klik mana-mana duit. Soalan itu akan dibuka untuk kumpulan semasa.</p>
+<div class="moneygrid" id="moneygrid"></div>
+</div>
+<div class="panel hidden" id="questionPanel">
+<div class="questionhead"><span class="pill" id="difficulty"></span><span class="pill" id="questionNo"></span><span class="pill" id="timer">⏱ 30s</span></div>
+<div class="qtext" id="qtext"></div>
+<div class="options" id="options"></div>
+<div class="feedback hidden" id="feedback"></div>
+<div class="chance hidden" id="chance"><h3>🔔 Peluang Kumpulan Lain!</h3><div id="chanceText"></div><div class="chanceBtns" id="chanceBtns"></div></div>
+<button class="next hidden" id="continue">➡️ KEMBALI KE PAPAN DUIT</button>
+</div>
+</section>
+
+<section id="final" class="panel final hidden">
+<div class="trophy">🏆</div><h2>Misi Selesai!</h2><p>Semua 30 soalan telah dibuka. Ini ialah kutipan markah setiap kumpulan.</p>
+<div id="ranking"></div><button class="again" id="again">🔄 MAIN SEMULA</button>
+</section>
+</div>
+
+<script>
+const Q=[{"id": 1, "d": "Mudah", "p": 1, "q": "Apakah tajuk teks tersebut?", "o": ["Pembelian Dalam Talian", "Pembelian Tanpa Tunai", "Pembayaran Digital", "Bazar Ramadan"], "a": 1}, {"id": 2, "d": "Mudah", "p": 1, "q": "Siapakah yang menonton berita tentang pembelian tanpa tunai?", "o": ["Ayah", "Farisha", "Ibu", "Penjual"], "a": 1}, {"id": 3, "d": "Mudah", "p": 1, "q": "Di manakah keluarga Farisha pergi pada bulan puasa yang lepas?", "o": ["Bazar Ramadan Kampung Baru", "Pasar Raya Kampung Baru", "Bazar Ramadan Shah Alam", "Pasar Kampung Baru"], "a": 0}, {"id": 4, "d": "Mudah", "p": 1, "q": "Apakah kemudahan yang ditawarkan oleh kebanyakan peniaga di bazar tersebut?", "o": ["Kad kredit", "Wang tunai", "E-dompet", "Cek"], "a": 2}, {"id": 5, "d": "Mudah", "p": 1, "q": "Bazar Ramadan Kampung Baru merupakan bazar tanpa tunai yang pertama di ______.", "o": ["Asia", "Kuala Lumpur", "Malaysia", "negara ini"], "a": 3}, {"id": 6, "d": "Mudah", "p": 1, "q": "Apakah yang perlu dimuat turun ke dalam telefon pintar?", "o": ["Aplikasi permainan", "Aplikasi e-dompet", "Aplikasi berita", "Aplikasi membeli-belah"], "a": 1}, {"id": 7, "d": "Mudah", "p": 1, "q": "Apakah yang perlu ditambah selepas aplikasi e-dompet dimuat turun?", "o": ["Nombor telefon", "Amaun nilai yang diperlukan", "Nama pengguna", "Alamat rumah"], "a": 1}, {"id": 8, "d": "Mudah", "p": 1, "q": "Apakah yang perlu dilakukan selepas memilih barangan?", "o": ["Memasukkan nombor PIN", "Membuat imbasan kod QR", "Membuka aplikasi berita", "Menghubungi penjual"], "a": 1}, {"id": 9, "d": "Mudah", "p": 1, "q": "Setiap transaksi e-dompet memerlukan pengesahan ______.", "o": ["nombor telefon", "kod QR", "nombor PIN", "kata laluan komputer"], "a": 2}, {"id": 10, "d": "Mudah", "p": 1, "q": "Siapakah yang bertanya kepada ayah tentang pembelian tanpa tunai?", "o": ["Farisha", "Ibu", "Penjual", "Pengunjung bazar"], "a": 0}, {"id": 11, "d": "Sederhana", "p": 2, "q": "Apakah maksud “pembelian tanpa tunai” berdasarkan teks?", "o": ["Membeli barangan tanpa membuat bayaran.", "Membeli barangan menggunakan sistem pembayaran elektronik atau dalam talian.", "Membeli barangan dengan wang syiling.", "Membeli barangan menggunakan cek."], "a": 1}, {"id": 12, "d": "Sederhana", "p": 2, "q": "Apakah kelebihan pembelian tanpa tunai berdasarkan teks?", "o": ["Pengguna tidak perlu membawa wang tunai.", "Pengguna tidak perlu memilih barangan.", "Pengguna tidak perlu menggunakan telefon.", "Pengguna tidak perlu membuat bayaran."], "a": 0}, {"id": 13, "d": "Sederhana", "p": 2, "q": "Apakah yang dapat disimpulkan tentang e-dompet berdasarkan teks?", "o": ["E-dompet digunakan untuk membuat transaksi bayaran.", "E-dompet hanya digunakan untuk menonton berita.", "E-dompet digunakan untuk memuat turun aplikasi.", "E-dompet hanya boleh digunakan di rumah."], "a": 0}, {"id": 14, "d": "Sederhana", "p": 2, "q": "Apakah hubungan antara e-dompet dengan kod QR?", "o": ["Kod QR digunakan untuk membuat pembelian melalui e-dompet.", "Kod QR digunakan untuk memuat turun berita.", "Kod QR digunakan untuk menambah amaun nilai.", "Kod QR digunakan untuk mengesahkan nombor telefon."], "a": 0}, {"id": 15, "d": "Sederhana", "p": 2, "q": "Apakah maklumat yang menunjukkan bahawa e-dompet mempunyai ciri keselamatan?", "o": ["Pengguna perlu memilih barangan.", "Pengguna perlu membuat imbasan kod QR.", "Setiap transaksi memerlukan pengesahan nombor PIN.", "Pengguna perlu memuat turun aplikasi."], "a": 2}, {"id": 16, "d": "Sederhana", "p": 2, "q": "Mengapakah nombor PIN diperlukan semasa transaksi?", "o": ["Untuk memilih barangan", "Untuk memastikan keselamatan transaksi", "Untuk memuat turun aplikasi", "Untuk melihat kod QR"], "a": 1}, {"id": 17, "d": "Sederhana", "p": 2, "q": "Apakah yang dapat disimpulkan jika sesuatu transaksi memerlukan nombor PIN?", "o": ["Transaksi tersebut mempunyai langkah keselamatan.", "Transaksi tersebut mesti dilakukan secara tunai.", "Transaksi tersebut tidak memerlukan telefon.", "Transaksi tersebut tidak boleh dilakukan di bazar."], "a": 0}, {"id": 18, "d": "Sederhana", "p": 2, "q": "Apakah sikap yang wajar ditunjukkan oleh pengguna e-dompet berdasarkan teks?", "o": ["Berhati-hati semasa membuat transaksi.", "Memberikan nombor PIN kepada orang lain.", "Membawa wang tunai sahaja.", "Tidak perlu memeriksa transaksi."], "a": 0}, {"id": 19, "d": "Sederhana", "p": 2, "q": "Apakah yang boleh dirumuskan tentang pembelian tanpa tunai?", "o": ["Pembayaran boleh dilakukan melalui sistem elektronik atau dalam talian.", "Pembayaran hanya boleh dilakukan dengan wang kertas.", "Pembayaran hanya boleh dilakukan menggunakan cek.", "Pembayaran perlu dilakukan tanpa telefon pintar."], "a": 0}, {"id": 20, "d": "Sederhana", "p": 2, "q": "Pernyataan manakah merupakan maklumat tersurat?", "o": ["Pengguna perlu berhati-hati menjaga PIN.", "Pembelian tanpa tunai menggunakan sistem pembayaran elektronik atau dalam talian.", "E-dompet merupakan kaedah pembayaran paling selamat.", "Semua orang gemar menggunakan e-dompet."], "a": 1}, {"id": 21, "d": "Sukar", "p": 3, "q": "Pernyataan manakah merupakan maklumat tersirat?", "o": ["Farisha menonton berita tentang pembelian tanpa tunai.", "Keluarga Farisha pernah ke Bazar Ramadan Kampung Baru.", "Pengguna tidak perlu membawa wang tunai untuk berbelanja.", "Pengguna perlu menjaga nombor PIN supaya transaksi lebih selamat."], "a": 3}, {"id": 22, "d": "Sukar", "p": 3, "q": "Apakah urutan yang betul untuk membuat pembelian menggunakan e-dompet?", "o": ["Pilih barangan → muat turun aplikasi → tambah amaun → imbas kod QR", "Muat turun aplikasi → tambah amaun → pilih barangan → imbas kod QR", "Tambah amaun → imbas kod QR → muat turun aplikasi → pilih barangan", "Imbas kod QR → pilih barangan → muat turun aplikasi → tambah amaun"], "a": 1}, {"id": 23, "d": "Sukar", "p": 3, "q": "Mengapakah pengguna tidak perlu membawa wang tunai untuk membeli-belah?", "o": ["Semua barangan diberikan secara percuma.", "Pembayaran boleh dibuat menggunakan e-dompet.", "Penjual tidak menerima wang.", "Pengguna hanya perlu menunjukkan telefon."], "a": 1}, {"id": 24, "d": "Sukar", "p": 3, "q": "Apakah yang boleh kita simpulkan tentang Bazar Ramadan Kampung Baru?", "o": ["Bazar tersebut menggunakan sistem pembayaran tanpa tunai.", "Bazar tersebut hanya menerima wang tunai.", "Bazar tersebut hanya menjual makanan.", "Bazar tersebut tidak mempunyai pengunjung."], "a": 0}, {"id": 25, "d": "Sukar", "p": 3, "q": "Mengapakah kedudukan bazar itu dianggap mempunyai keunikan tersendiri?", "o": ["Bazar itu berada di bandar yang menarik minat pengunjung.", "Bazar itu dibuka sepanjang tahun.", "Bazar itu hanya mempunyai satu peniaga.", "Bazar itu tidak menerima pembayaran."], "a": 0}, {"id": 26, "d": "Sukar", "p": 3, "q": "Mengapakah Farisha bertanya kepada ayahnya tentang pembelian tanpa tunai?", "o": ["Farisha ingin mengetahui maksud pembelian tanpa tunai.", "Farisha ingin membeli telefon baharu.", "Farisha ingin pergi ke bazar.", "Farisha ingin menonton televisyen."], "a": 0}, {"id": 27, "d": "Sukar", "p": 3, "q": "Jika pengguna tidak membawa wang tunai, apakah yang boleh dilakukannya berdasarkan teks?", "o": ["Tidak boleh membeli apa-apa.", "Menggunakan e-dompet untuk membuat bayaran.", "Meminta semua barangan secara percuma.", "Menunggu sehingga mempunyai wang tunai."], "a": 1}, {"id": 28, "d": "Sukar", "p": 3, "q": "Apakah yang boleh dirumuskan tentang pembelian tanpa tunai berdasarkan keseluruhan teks?", "o": ["Pembelian tanpa tunai melibatkan transaksi elektronik dan tidak memerlukan wang tunai secara fizikal.", "Pembelian tanpa tunai hanya boleh dilakukan di Bazar Ramadan.", "Pembelian tanpa tunai tidak memerlukan sebarang pengesahan.", "Pembelian tanpa tunai hanya menggunakan wang kertas."], "a": 0}, {"id": 29, "d": "Sukar", "p": 3, "q": "Farisha ingin membeli makanan di bazar tersebut tetapi tidak membawa wang tunai. Apakah kaedah yang sesuai berdasarkan teks?", "o": ["Menggunakan e-dompet.", "Menggunakan wang syiling.", "Menggunakan cek.", "Tidak membuat pembelian."], "a": 0}, {"id": 30, "d": "Sukar", "p": 3, "q": "Apakah pengajaran yang boleh diperoleh daripada teks tentang penggunaan e-dompet?", "o": ["Pengguna perlu menggunakan e-dompet dengan mengambil kira aspek keselamatan.", "Pengguna boleh memberikan nombor PIN kepada sesiapa sahaja.", "Pengguna tidak perlu mengesahkan setiap transaksi.", "Pengguna perlu membawa wang tunai setiap kali membeli-belah."], "a": 0}];
+let teams=[],current=0,selected=null,answered=false,time=30,timer=null;
+const $=x=>document.getElementById(x);
+
+function setupTeams(){
+ const g=$('teamgrid');g.innerHTML='';
+ for(let i=0;i<6;i++){const d=document.createElement('div');d.className='team';d.innerHTML=`<label>👥 Kumpulan ${i+1}</label><input id="t${i}" value="Kumpulan ${i+1}" maxlength="24">`;g.appendChild(d);}
+}
+setupTeams();
+
+function sound(kind){
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  const c=new AC(),now=c.currentTime;
+  if(kind==='coin'){
+   [880,1175,1568].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,now+i*.07);g.gain.exponentialRampToValueAtTime(.09,now+i*.07+.015);g.gain.exponentialRampToValueAtTime(.0001,now+i*.07+.16);o.connect(g);g.connect(c.destination);o.start(now+i*.07);o.stop(now+i*.07+.17);});
+  }else if(kind==='wrong'){
+   const o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.setValueAtTime(220,now);o.frequency.exponentialRampToValueAtTime(110,now+.25);g.gain.value=.035;o.connect(g);g.connect(c.destination);o.start();o.stop(now+.26);
+  }else if(kind==='win'){
+   [523,659,784,1046].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.value=.04;o.connect(g);g.connect(c.destination);o.start(now+i*.1);o.stop(now+i*.1+.18);});
+  }
+ }catch(e){}
+}
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function start(){
+ teams=Array.from({length:6},(_,i)=>({name:$('t'+i).value.trim()||`Kumpulan ${i+1}`,score:0}));
+ current=0;Q.forEach(x=>x.used=false);$('setup').classList.add('hidden');$('final').classList.add('hidden');$('game').classList.remove('hidden');render();
+}
+$('start').onclick=start;
+
+function render(){
+ $('turn').textContent=`🎯 Giliran: ${teams[current].name}`;
+ $('totalbank').textContent=Q.filter(x=>x.used).reduce((s,x)=>s+x.p,0);
+ $('scores').innerHTML=teams.map((t,i)=>`<div class="score"><div class="coin">💰</div><strong>${esc(t.name)}</strong><b>${t.score}</b></div>`).join('');
+ $('moneygrid').innerHTML='';
+ Q.forEach((x,i)=>{
+  const b=document.createElement('button');b.className='money '+(x.p===1?'easy':x.p===2?'medium':'hard');b.disabled=x.used;
+  b.innerHTML=`<div class="denom">RM${x.p}</div><div class="label">${x.d}</div><div class="qno">Soalan ${i+1}</div>`;
+  b.onclick=()=>openQ(i);$('moneygrid').appendChild(b);
+ });
+}
+function openQ(i){
+ selected=i;Q[i].used=true;answered=false;time=30;$('questionPanel').classList.remove('hidden');$('questionPanel').scrollIntoView({behavior:'smooth',block:'center'});
+ const x=Q[i];$('difficulty').textContent=x.d==='Mudah'?'💵 MUDAH • 1 MARKAH':x.d==='Sederhana'?'💵💵 SEDERHANA • 2 MARKAH':'💵💵💵 SUKAR • 3 MARKAH';$('questionNo').textContent=`Soalan ${i+1}`;
+ $('timer').textContent='⏱ 30s';$('qtext').textContent=x.q;$('feedback').classList.add('hidden');$('chance').classList.add('hidden');$('continue').classList.add('hidden');
+ const o=$('options');o.innerHTML='';x.o.forEach((v,j)=>{const b=document.createElement('button');b.className='opt';b.textContent=String.fromCharCode(65+j)+'. '+v;b.onclick=()=>answer(j,b,current);o.appendChild(b)});
+ clearInterval(timer);timer=setInterval(()=>{time--;$('timer').textContent=`⏱ ${time}s`;if(time<=0){clearInterval(timer);answer(-1,null,current,true)}},1000);sound('coin');
+}
+function answer(choice,button,owner,timeout=false){
+ if(answered)return;answered=true;clearInterval(timer);
+ const x=Q[selected], opts=[...document.querySelectorAll('.opt')];opts.forEach((b,j)=>{b.disabled=true;if(j===x.a)b.classList.add('correct')});
+ if(choice===x.a){
+  teams[owner].score+=x.p;button.classList.add('correct');$('feedback').textContent=`🎉 Betul! ${teams[owner].name} mendapat ${x.p} markah! 💰`;
+  $('feedback').style.background='#dcfce7';sound('coin');setTimeout(()=>sound('win'),180);render();
+  $('continue').classList.remove('hidden');return;
+ }
+ if(button)button.classList.add('wrong');$('feedback').textContent=timeout?`⏰ Masa tamat! Jawapan betul: ${String.fromCharCode(65+x.a)}.`:`💡 Belum tepat. Kumpulan lain masih boleh rebut ${x.p} markah!`;
+ $('feedback').style.background='#fee2e2';sound('wrong');
+ offerOtherTeams(owner);
+}
+function offerOtherTeams(owner){
+ const others=teams.map((t,i)=>({t,i})).filter(x=>x.i!==owner);
+ $('chance').classList.remove('hidden');$('chanceText').textContent=`Pilih kumpulan yang ingin mencuba. Setiap kumpulan hanya mendapat satu cubaan.`;
+ const box=$('chanceBtns');box.innerHTML='';
+ others.forEach(({t,i})=>{const b=document.createElement('button');b.textContent='💰 '+t.name;b.onclick=()=>rebound(i,b);box.appendChild(b)});
+}
+function rebound(i,b){
+ if(b.disabled)return;b.disabled=true;Q[selected].reboundTried=(Q[selected].reboundTried||[]).concat(i);
+ const x=Q[selected];
+ const choice=prompt(`${teams[i].name}\\n\\n${x.q}\\n\\nTaip A, B, C atau D:`);
+ if(!choice)return;
+ const c='ABCD'.indexOf(choice.trim().toUpperCase());
+ if(c===x.a){
+  teams[i].score+=x.p;$('feedback').textContent=`🎉 Rebutan berjaya! ${teams[i].name} mendapat ${x.p} markah! 💰`;
+  $('feedback').style.background='#dcfce7';sound('win');$('chance').classList.add('hidden');$('continue').classList.remove('hidden');render();
+ }else{
+  $('feedback').textContent=`❌ ${teams[i].name} belum tepat. Kumpulan lain masih boleh cuba.`;
+  $('feedback').style.background='#fee2e2';sound('wrong');
+  const left=[...$('chanceBtns').querySelectorAll('button')].filter(x=>!x.disabled);
+  if(!left.length){$('chance').classList.add('hidden');$('continue').classList.remove('hidden');}
+ }
+}
+$('continue').onclick=()=>{
+ $('questionPanel').classList.add('hidden');
+ current=(current+1)%teams.length;
+ if(Q.every(x=>x.used)){finish();return}
+ render();
+};
+function finish(){
+ $('game').classList.add('hidden');$('final').classList.remove('hidden');sound('win');
+ const r=[...teams].sort((a,b)=>b.score-a.score);
+ $('ranking').innerHTML=r.map((t,i)=>`<div class="rank"><b>${i===0?'🏆':i+1}</b><span>${esc(t.name)}</span><strong>💰 ${t.score} markah</strong></div>`).join('');
+}
+$('again').onclick=()=>{clearInterval(timer);$('final').classList.add('hidden');$('setup').classList.remove('hidden');setupTeams();};
+</script>
+</body>
+</html>
